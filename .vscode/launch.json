@@ -1,0 +1,55 @@
+{
+  // Configurações de depuração. PYTHONPATH=src para imports top-level.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Pipeline completo (main)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "main",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    },
+    {
+      "name": "CLI: preprocess",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "cli.preprocess",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    },
+    {
+      "name": "CLI: train",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "cli.train",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    },
+    {
+      "name": "CLI: evaluate",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "cli.evaluate",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    },
+    {
+      "name": "CLI: audit",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "cli.audit",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    },
+    {
+      "name": "Pytest (arquivo atual)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-v"],
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    }
+  ]
+}

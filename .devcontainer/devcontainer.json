@@ -1,0 +1,24 @@
+{
+  "name": "risco-diabetes-fairness",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/va-h/devcontainers-features/uv:1": {}
+  },
+  "postCreateCommand": "uv sync --dev --extra app && uv run pre-commit install",
+  "containerEnv": {
+    "PYTHONPATH": "/workspaces/risco-diabetes-fairness/src"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/risco-diabetes-fairness/.venv/bin/python"
+      }
+    }
+  }
+}
