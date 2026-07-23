@@ -1,0 +1,39 @@
+# =============================================================================
+# docker-compose.yml — orquestra o dashboard e (opcionalmente) um servidor
+# MLflow para tracking de experimentos.
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: risco-diabetes-fairness:latest
+    container_name: risco-diabetes-app
+    ports:
+      - "8501:8501"
+    volumes:
+      # Monta modelos e dados processados (gerados fora do container).
+      - ./models:/app/models:ro
+      - ./data/processed:/app/data/processed:ro
+    restart: unless-stopped
+
+  # Servidor de tracking de experimentos (opcional — habilite conforme a necessidade).
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.15.1
+    container_name: risco-diabetes-mlflow
+    profiles: ["tracking"]
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    restart: unless-stopped
+
+volumes:
+  mlflow-data:

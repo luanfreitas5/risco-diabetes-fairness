@@ -1,0 +1,50 @@
+# =============================================================================
+# mkdocs.yml — documentação MkDocs Material + mkdocstrings (API a partir das
+# docstrings pt-BR em formato NumPy).
+# =============================================================================
+site_name: Risco de Diabetes com Fairness
+site_description: Triagem de risco de diabetes com auditoria de justiça, calibração e SHAP.
+repo_url: https://github.com/luanfreitas5/risco-diabetes-fairness
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/weather-night
+        name: Modo escuro
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_source: true
+
+nav:
+  - Início: index.md
+  - Guias:
+      - Instalação e uso: guias/uso.md
+      - Arquitetura: guias/arquitetura.md
+  - Referência da API: referencia.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - toc:
+      permalink: true
