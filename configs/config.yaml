@@ -1,0 +1,42 @@
+# =============================================================================
+# config.yaml — configurações gerais do projeto.
+# Validado em tempo de execução por src/config/settings.py (Pydantic).
+# =============================================================================
+
+project:
+  name: risco-diabetes-fairness
+  version: 0.1.0
+
+# Reprodutibilidade: semente global usada em todas as operações estocásticas.
+random_seed: 42
+
+# --- Dados -------------------------------------------------------------------
+data:
+  # Arquivo bruto primário (survey BRFSS 2015, versão binária desbalanceada,
+  # ~253k respostas, prevalência ~14%). É a versão realista para triagem.
+  raw_file: diabetes_binary_health_indicators_BRFSS2015.csv
+  target: Diabetes_binary
+  # Fração destinada ao conjunto de teste (holdout) e à validação.
+  test_size: 0.20
+  valid_size: 0.20
+  # Estratifica os splits pela variável-alvo para preservar a prevalência.
+  stratify: true
+
+# --- Atributos sensíveis (auditoria de justiça) ------------------------------
+# Colunas usadas para avaliar disparidade de desempenho entre subgrupos.
+sensitive_features:
+  - Sex
+  - AgeBand
+  - Income
+  - Education
+
+# --- Avaliação ---------------------------------------------------------------
+evaluation:
+  # Métrica-alvo para seleção de modelo (ver justificativa no README/Model Card).
+  primary_metric: roc_auc
+  cv_folds: 5
+  # Limiar de decisão operacional para a triagem (favorece recall/sensibilidade).
+  decision_threshold: 0.30
+  # Métrica de justiça a ser reportada por subgrupo.
+  fairness_metric: true_positive_rate
+  verbose: 0

@@ -1,0 +1,37 @@
+# =============================================================================
+# model_params.yaml — hiperparâmetros de treino e avaliação.
+# Validado por src/config/settings.py (Pydantic).
+# =============================================================================
+
+# Modelo escolhido para produção: "logistic" (baseline) ou "lightgbm".
+active_model: lightgbm
+
+# --- Baseline: Regressão Logística -------------------------------------------
+# Interpretável e serve de benchmark antes de qualquer modelo complexo.
+logistic:
+  C: 1.0
+  max_iter: 1000
+  # Compensa o desbalanceamento de classes (~14% de positivos).
+  class_weight: balanced
+  solver: lbfgs
+
+# --- LightGBM ----------------------------------------------------------------
+lightgbm:
+  n_estimators: 600
+  learning_rate: 0.03
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 40
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_lambda: 1.0
+  # Trata o desbalanceamento sem reamostrar (mantém a prevalência real).
+  class_weight: balanced
+  n_jobs: -1
+
+# --- Calibração de probabilidades --------------------------------------------
+# As probabilidades alimentam a triagem, então precisam ser confiáveis.
+calibration:
+  enabled: true
+  method: isotonic   # "isotonic" ou "sigmoid" (Platt)
+  cv: 5

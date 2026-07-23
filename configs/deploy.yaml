@@ -1,0 +1,15 @@
+# =============================================================================
+# deploy.yaml — configurações do dashboard Streamlit (app/app.py).
+# =============================================================================
+
+app:
+  title: "Triagem de Risco de Diabetes — IA Responsável"
+  # Nome do artefato de modelo carregado pelo dashboard (em models/).
+  model_file: model.joblib
+  # Limiar de decisão exibido por padrão no dashboard (ajustável na UI).
+  default_threshold: 0.30
+  # Aviso obrigatório: ferramenta de triagem, não diagnóstico.
+  disclaimer: >
+    Esta é uma ferramenta de triagem de risco para fins educacionais e de
+    portfólio. NÃO substitui avaliação médica profissional nem constitui
+    diagnóstico. Não colete nem armazene dados pessoais identificáveis.

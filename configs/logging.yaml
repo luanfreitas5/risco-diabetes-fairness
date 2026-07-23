@@ -1,0 +1,24 @@
+# =============================================================================
+# logging.yaml — configuração de logging (console via rich + arquivo rotativo).
+# Consumido por src/config/logging.py.
+# =============================================================================
+
+# Nível global (DEBUG, INFO, WARNING, ERROR, CRITICAL).
+level: INFO
+
+console:
+  # Handler rich: colorido, com nome do logger, nível e número da linha.
+  enabled: true
+  show_path: true
+  rich_tracebacks: true
+
+file:
+  enabled: true
+  # Diretório onde os logs diários são gravados (log_YYYY-MM-DD.log).
+  dir: logs
+  # Formato do log em arquivo (separado por tabs, conforme CLAUDE.md).
+  format: "%(asctime)s \t %(levelname)s \t %(name)s \t %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  # Rotação diária, mantendo 14 arquivos.
+  when: midnight
+  backup_count: 14
