@@ -6,7 +6,7 @@ RUN := $(UV) run python src/main.py    # 'src' vira raiz do path ao rodar o scri
 .DEFAULT_GOAL := help
 .PHONY: help init venv install install-all install-models hooks pre-commit update-hooks update lock export \
 	check format lint typecheck security deadcode complexity docstrings refurb quality \
-	test smoke hooks pre-commit update-hooks update-version docs docs-serve docs-deploy profile clean cache jupyter notebook add remove tree \
+	test smoke hooks pre-commit update-hooks release docs docs-serve docs-deploy profile clean cache jupyter notebook add remove tree \
 	clean-processed clean-reports clean-outputs clean-notebooks \
 	preprocess train evaluate audit pipeline app
 
@@ -89,10 +89,9 @@ pre-commit:  ## Roda todos os hooks do pre-commit em todos os arquivos
 update-hooks:  ## Atualiza os hooks do pre-commit
 	$(UV) run pre-commit autoupdate
 
-update-version:
-	$(UV) add --dev commitizen
-	$(UV) run cz changelog
-	$(UV) run cz bump --changelog --yes
+release:  ## Cria uma nova release (versão + changelog + tag)
+	$(UV) run cz bump --yes
+	$(UV) run cz changelog --yes
 
 # --- Limpeza de saídas do pipeline ------------------------------------------
 clean-processed:  ## Remove os artefatos de dados processados

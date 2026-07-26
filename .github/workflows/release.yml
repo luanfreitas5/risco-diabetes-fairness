@@ -30,32 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
       - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-          python-version: "3.12"
 
       - run: uv sync --dev
 
-      - name: Configurar identidade do git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump com Commitizen (versão + CHANGELOG.md)
-        id: cz
-        run: |
-          INCREMENT="${{ inputs.increment }}"
-          if [ -n "$INCREMENT" ]; then
-            uv run cz bump --changelog --yes --increment "$INCREMENT"
-          else
-            uv run cz bump --changelog --yes
-          fi
-          echo "version=$(uv run cz version --project)" >> "$GITHUB_OUTPUT"
+      - run: cz bump --yes
 
       - name: Enviar commit e tag
         run: git push --follow-tags
