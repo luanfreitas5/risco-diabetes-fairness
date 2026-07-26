@@ -1,7 +1,11 @@
-## v0.2.0 (2026-07-26)
+## v0.3.0 (2026-07-26)
 
 ### Feat
 
+- renomeia variáveis para maior clareza e adiciona método to_numpy na classe ShapResult
+- atualiza IDs das células nos notebooks de EDA e modelagem
+- torna obrigatório o tipo de bump no release e atualiza a matriz de versões do Python nos testes
+- atualiza versão do projeto e ajusta configuração do Makefile
 - atualiza versões de dependências no pre-commit
 - atualiza a configuração do baseline de segredos
 - adiciona workflows do GitHub Actions e configurações de dependências
