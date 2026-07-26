@@ -50,16 +50,22 @@ jobs:
         id: cz
         run: |
           INCREMENT="${{ inputs.increment }}"
+          CURRENT_VERSION="$(uv run cz version --project)"
+          CURRENT_TAG="v$CURRENT_VERSION"
+
           if git tag --list | grep -q .; then
+            if ! git tag --list "$CURRENT_TAG" | grep -q .; then
+              git tag "$CURRENT_TAG"
+              echo "Tag da versão atual ausente. Criando $CURRENT_TAG antes do bump."
+            fi
             if [ -n "$INCREMENT" ]; then
               uv run cz bump --changelog --yes --increment "$INCREMENT"
             else
               uv run cz bump --changelog --yes
             fi
           else
-            VERSION="$(uv run cz version --project)"
-            git tag "v$VERSION"
-            echo "Nenhuma tag existente. Criando tag inicial v$VERSION sem novo bump."
+            git tag "$CURRENT_TAG"
+            echo "Nenhuma tag existente. Criando tag inicial $CURRENT_TAG sem novo bump."
           fi
           echo "version=$(uv run cz version --project)" >> "$GITHUB_OUTPUT"
 
