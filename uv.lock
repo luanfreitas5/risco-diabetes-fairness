@@ -3786,7 +3786,7 @@ dev = [
 requires-dist = [
     { name = "fairlearn", specifier = ">=0.10" },
     { name = "joblib", specifier = ">=1.4" },
-    { name = "lightgbm", specifier = ">=4.3" },
+    { name = "lightgbm", specifier = ">=4.7.0" },
     { name = "matplotlib", specifier = ">=3.9" },
     { name = "numba", specifier = ">=0.57" },
     { name = "numpy", specifier = ">=1.26" },
