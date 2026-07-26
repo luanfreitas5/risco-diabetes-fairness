@@ -1,24 +1,18 @@
-# Changelog
+## v0.3.0 (2026-07-26)
 
-Todas as mudanças notáveis deste projeto são documentadas aqui.
+### Feat
 
-O formato segue [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
-e o versionamento segue [Semantic Versioning](https://semver.org/lang/pt-BR/).
-
-## [Não lançado]
-
-### Adicionado
-- Estrutura inicial do projeto (configs, `src/`, testes, docs, CI).
-- Contratos de dados (Pandera) para os estágios bruto e processado.
-- Pipeline de pré-processamento com engenharia de `AgeBand` e hash do dataset.
-- Fábrica de modelos: baseline (Regressão Logística) e LightGBM, com calibração.
-- Avaliação com validação cruzada (IC 95%), calibração, ROC/PR e SHAP.
-- Auditoria de justiça por subgrupo (`Sex`, `AgeBand`, `Income`, `Education`)
-  com `fairlearn`.
-- Dashboard Streamlit de triagem interativa.
-- Model Card e Datasheet.
-
-## [0.1.0] - 2026-07-06
-
-### Adicionado
-- Versão inicial do esqueleto do projeto.
+- renomeia variáveis para maior clareza e adiciona método to_numpy na classe ShapResult
+- atualiza IDs das células nos notebooks de EDA e modelagem
+- torna obrigatório o tipo de bump no release e atualiza a matriz de versões do Python nos testes
+- atualiza versão do projeto e ajusta configuração do Makefile
+- atualiza versões de dependências no pre-commit
+- atualiza a configuração do baseline de segredos
+- adiciona workflows do GitHub Actions e configurações de dependências
+- adiciona configuração inicial do projeto com Docker e Makefile
+- adiciona configuração do ambiente e documentação inicial
+- adiciona arquivos de configuração do projeto
+- adiciona arquivos de configuração e documentação inicial
+- adiciona notebooks de EDA e modelagem Adiciona o notebook de Análise Exploratória (EDA) e o notebook de Modelagem e Avaliação, incluindo importações e estrutura inicial para análise de risco de diabetes.
+- adiciona dashboard de triagem de risco de diabetes Implementa uma ferramenta educacional com coleta de fatores de risco, cálculo de probabilidade e visualização com medidor Plotly.
+- adiciona pipelines de pré-processamento, treino, avaliação e auditoria de justiça

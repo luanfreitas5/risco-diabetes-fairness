@@ -42,6 +42,20 @@ class ShapResult:
     feature_names: list[str]
     data: np.ndarray
 
+    def to_numpy(self) -> np.ndarray:
+        """Retorna os valores SHAP como ``np.ndarray``.
+
+        Returns
+        -------
+        np.ndarray
+            Matriz de valores SHAP (linhas x features).
+
+        Examples
+        --------
+        >>> result.to_numpy()  # doctest: +SKIP
+        """
+        return self.values
+
 
 def _unwrap_estimator(estimator: object) -> object:
     """Desembrulha o estimador base de um ``CalibratedClassifierCV``.
@@ -104,7 +118,9 @@ def compute_shap_values(
     explainer = shap.Explainer(estimator, x_transformed, feature_names=feature_names)
     # O stub do shap tipa o retorno como ``Explanation | list[Explanation]``,
     # mas para um único explainer o retorno é sempre uma ``Explanation``.
-    explanation = cast(shap.Explanation, explainer(x_transformed, check_additivity=False))
+    # ``check_additivity`` não é aceito por todos os explainers (ex.: LinearExplainer
+    # em versões mais antigas do shap), por isso é omitido aqui.
+    explanation = cast(shap.Explanation, explainer(x_transformed))
 
     values = np.asarray(explanation.values)
     # Para saída binária (linhas x features x classes), fica com a classe positiva.

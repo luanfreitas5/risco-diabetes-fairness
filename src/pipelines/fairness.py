@@ -39,8 +39,8 @@ def run_fairness_audit() -> FairnessReport:
     seed_everything()
 
     model, _ = load_model(paths.models / MODEL_FILE)
-    df = load_processed()
-    split = split_data(df)
+    fairness_audit_df = load_processed()
+    split = split_data(fairness_audit_df)
 
     y_proba = model.predict_proba(split.x_test)[:, 1]
     report = audit_fairness(split.y_test, y_proba, split.sensitive_test)

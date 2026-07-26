@@ -59,18 +59,18 @@ def load_raw(raw_file: str | None = None, *, validate: bool = True) -> pl.DataFr
         )
 
     logger.info("Carregando dataset bruto: %s", path.name)
-    df = pl.read_csv(path)
+    raw_df = pl.read_csv(path)
     logger.info(
         "Dataset carregado: %d linhas x %d colunas | hash=%s",
-        df.height,
-        df.width,
+        raw_df.height,
+        raw_df.width,
         hash_file(path)[:12],
     )
 
     if validate:
-        df = validate_raw(df)
+        raw_df = validate_raw(raw_df)
         logger.info("Contrato de dados (raw) validado com sucesso.")
-    return df
+    return raw_df
 
 
 def load_processed(file_name: str = "diabetes_processed.parquet") -> pl.DataFrame:
