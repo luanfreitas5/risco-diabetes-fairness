@@ -8273,9 +8273,7 @@ grandes, uma amostra é usada para manter o custo computacional aceitável.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/explainability/shap_explainer.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
@@ -8291,7 +8289,9 @@ grandes, uma amostra é usada para manter o custo computacional aceitável.</p>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_global_importance</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">ShapResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_global_importance</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">ShapResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcula a importância global das features (média do |SHAP|).</span>
 
 <span class="sd">    Parameters</span>
@@ -8474,7 +8474,9 @@ grandes, uma amostra é usada para manter o custo computacional aceitável.</p>
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
-<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_shap_values</span><span class="p">(</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_shap_values</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Pipeline</span><span class="p">,</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -8513,7 +8515,9 @@ grandes, uma amostra é usada para manter o custo computacional aceitável.</p>
     <span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">Explainer</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">x_transformed</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
     <span class="c1"># O stub do shap tipa o retorno como ``Explanation | list[Explanation]``,</span>
     <span class="c1"># mas para um único explainer o retorno é sempre uma ``Explanation``.</span>
-    <span class="n">explanation</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">shap</span><span class="o">.</span><span class="n">Explanation</span><span class="p">,</span> <span class="n">explainer</span><span class="p">(</span><span class="n">x_transformed</span><span class="p">,</span> <span class="n">check_additivity</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="c1"># ``check_additivity`` não é aceito por todos os explainers (ex.: LinearExplainer</span>
+    <span class="c1"># em versões mais antigas do shap), por isso é omitido aqui.</span>
+    <span class="n">explanation</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">shap</span><span class="o">.</span><span class="n">Explanation</span><span class="p">,</span> <span class="n">explainer</span><span class="p">(</span><span class="n">x_transformed</span><span class="p">))</span>
 
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">explanation</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
     <span class="c1"># Para saída binária (linhas x features x classes), fica com a classe positiva.</span>
