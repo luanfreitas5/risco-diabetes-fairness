@@ -1,3 +1,9 @@
+## v0.4.0 (2026-07-26)
+
+### Feat
+
+- atualiza changelog e ajusta workflow de release
+
 ## v0.3.0 (2026-07-26)
 
 ### Feat
