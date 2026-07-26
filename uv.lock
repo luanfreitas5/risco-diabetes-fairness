@@ -3828,7 +3828,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=5.0" },
     { name = "radon", specifier = ">=6.0" },
     { name = "refurb", specifier = ">=2.0" },
-    { name = "ruff", specifier = ">=0.5" },
+    { name = "ruff", specifier = ">=0.16.0" },
     { name = "scalene", specifier = ">=1.5" },
     { name = "vulture", specifier = ">=2.11" },
     { name = "xenon", specifier = ">=0.9" },
