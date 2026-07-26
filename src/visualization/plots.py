@@ -65,9 +65,8 @@ def plot_roc_curve(y_true: ArrayLike, y_proba: ArrayLike) -> Figure:
     """
     apply_theme()
     fig, ax = plt.subplots(figsize=(7, 6))
-    RocCurveDisplay.from_predictions(
-        y_true, y_proba, ax=ax, curve_kwargs={"color": PALETTE["primary"]}
-    )
+    display = RocCurveDisplay.from_predictions(y_true, y_proba, ax=ax)
+    display.line_.set_color(PALETTE["primary"])
     ax.plot([0, 1], [0, 1], linestyle="--", color=PALETTE["neutral"], label="Aleatório")
     ax.set_title("Curva ROC — Triagem de Risco de Diabetes")
     ax.set_xlabel("Taxa de falsos positivos")
@@ -93,9 +92,8 @@ def plot_precision_recall_curve(y_true: ArrayLike, y_proba: ArrayLike) -> Figure
     """
     apply_theme()
     fig, ax = plt.subplots(figsize=(7, 6))
-    PrecisionRecallDisplay.from_predictions(
-        y_true, y_proba, ax=ax, curve_kwargs={"color": PALETTE["accent"]}
-    )
+    display = PrecisionRecallDisplay.from_predictions(y_true, y_proba, ax=ax)
+    display.line_.set_color(PALETTE["accent"])
     prevalence = float(np.mean(np.asarray(y_true)))
     ax.axhline(
         prevalence, linestyle="--", color=PALETTE["neutral"], label=f"Prevalência={prevalence:.2f}"
