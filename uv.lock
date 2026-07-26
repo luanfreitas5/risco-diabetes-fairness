@@ -3823,7 +3823,7 @@ dev = [
     { name = "nbstripout", specifier = ">=0.7" },
     { name = "pip", specifier = ">=26.1.2" },
     { name = "pip-audit", specifier = ">=2.7" },
-    { name = "pre-commit", specifier = ">=3.7" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
     { name = "pytest", specifier = ">=8.2" },
     { name = "pytest-cov", specifier = ">=5.0" },
     { name = "radon", specifier = ">=6.0" },
