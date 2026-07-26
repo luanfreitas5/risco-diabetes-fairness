@@ -46,7 +46,7 @@ def seed_everything(seed: int = DEFAULT_SEED) -> int:
 
     # opcional: apenas se lightgbm estiver disponível (usa a semente no fit)
     with contextlib.suppress(ImportError):
-        import lightgbm  # type: ignore # noqa: F401, PLC0415
+        import lightgbm  # type: ignore  # noqa: F401, PLC0415
 
     logger.info("Sementes de aleatoriedade fixadas (seed=%d).", seed)
     return seed

@@ -51,8 +51,8 @@ def run_evaluation() -> dict[str, float]:
     seed_everything()
 
     model, _ = load_model(paths.models / MODEL_FILE)
-    df = load_processed()
-    split = split_data(df)
+    processed_df = load_processed()
+    split = split_data(processed_df)
 
     y_proba = model.predict_proba(split.x_test)[:, 1]
 

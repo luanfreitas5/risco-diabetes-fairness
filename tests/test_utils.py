@@ -18,8 +18,8 @@ from utils.numbers import to_float
 @pytest.mark.smoke
 def test_hash_dataframe_is_deterministic() -> None:
     """O hash do DataFrame é estável para o mesmo conteúdo."""
-    df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
-    assert hash_dataframe(df) == hash_dataframe(df.clone())
+    sample_df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+    assert hash_dataframe(sample_df) == hash_dataframe(sample_df.clone())
 
 
 def test_hash_dataframe_changes_with_content() -> None:

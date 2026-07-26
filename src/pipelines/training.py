@@ -47,8 +47,8 @@ def run_training() -> Path:
     paths = get_paths()
     paths.ensure_dirs()
 
-    df = load_processed()
-    split: DataSplit = split_data(df)
+    processed_df = load_processed()
+    split: DataSplit = split_data(processed_df)
 
     # 1) Baseline (benchmark): Regressão Logística.
     logger.info("Avaliando baseline (Regressão Logística) por validação cruzada.")

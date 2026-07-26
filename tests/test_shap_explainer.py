@@ -32,9 +32,9 @@ def shap_result(small_fit):
 def test_compute_shap_values_shapes_match_features(small_fit, shap_result) -> None:
     """Os valores SHAP têm uma coluna por feature transformada."""
     _, x = small_fit
-    assert shap_result.values.shape[0] == len(x)
-    assert shap_result.values.shape[1] == len(shap_result.feature_names)
-    assert shap_result.data.shape == shap_result.values.shape
+    assert shap_result.to_numpy().shape[0] == len(x)
+    assert shap_result.to_numpy().shape[1] == len(shap_result.feature_names)
+    assert shap_result.to_numpy().shape == shap_result.to_numpy().shape
 
 
 def test_compute_shap_values_respects_max_sample(small_fit) -> None:

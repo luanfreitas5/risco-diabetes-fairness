@@ -42,6 +42,20 @@ class ShapResult:
     feature_names: list[str]
     data: np.ndarray
 
+    def to_numpy(self) -> np.ndarray:
+        """Retorna os valores SHAP como ``np.ndarray``.
+
+        Returns
+        -------
+        np.ndarray
+            Matriz de valores SHAP (linhas x features).
+
+        Examples
+        --------
+        >>> result.to_numpy()  # doctest: +SKIP
+        """
+        return self.values
+
 
 def _unwrap_estimator(estimator: object) -> object:
     """Desembrulha o estimador base de um ``CalibratedClassifierCV``.

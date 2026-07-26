@@ -24,8 +24,8 @@ def test_load_raw_reads_and_validates_csv(
     synthetic_raw.write_csv(raw_path)
     monkeypatch.setattr(loader, "get_paths", lambda: fake_paths)
 
-    df = loader.load_raw("raw.csv")
-    assert df.height == synthetic_raw.height
+    raw_df = loader.load_raw("raw.csv")
+    assert raw_df.height == synthetic_raw.height
 
 
 def test_load_raw_missing_file_raises(
@@ -46,8 +46,8 @@ def test_load_raw_uses_configured_file_name_when_none_given(
     synthetic_raw.write_csv(fake_paths.data_raw / settings.data.raw_file)
     monkeypatch.setattr(loader, "get_paths", lambda: fake_paths)
 
-    df = loader.load_raw()
-    assert df.height == synthetic_raw.height
+    raw_df = loader.load_raw()
+    assert raw_df.height == synthetic_raw.height
 
 
 def test_load_raw_skips_validation_when_disabled(
@@ -58,8 +58,8 @@ def test_load_raw_skips_validation_when_disabled(
     pl.DataFrame({"ColunaQualquer": [1, 2, 3]}).write_csv(fake_paths.data_raw / "raw.csv")
     monkeypatch.setattr(loader, "get_paths", lambda: fake_paths)
 
-    df = loader.load_raw("raw.csv", validate=False)
-    assert "ColunaQualquer" in df.columns
+    raw_df = loader.load_raw("raw.csv", validate=False)
+    assert "ColunaQualquer" in raw_df.columns
 
 
 def test_load_processed_reads_valid_parquet(
@@ -71,8 +71,8 @@ def test_load_processed_reads_valid_parquet(
     write_parquet(processed, fake_paths.data_processed / "processed.parquet")
     monkeypatch.setattr(loader, "get_paths", lambda: fake_paths)
 
-    df = loader.load_processed("processed.parquet")
-    assert "AgeBand" in df.columns
+    processed_df = loader.load_processed("processed.parquet")
+    assert "AgeBand" in processed_df.columns
 
 
 def test_load_processed_missing_file_raises(

@@ -12,8 +12,8 @@ from features.engineering import add_age_band, engineer_features
 @pytest.mark.smoke
 def test_add_age_band_maps_boundaries() -> None:
     """Verifica o mapeamento das faixas etárias nos limites das categorias."""
-    df = pl.DataFrame({"Age": [1.0, 4.0, 5.0, 8.0, 9.0, 13.0]})
-    result = add_age_band(df)
+    age_df = pl.DataFrame({"Age": [1.0, 4.0, 5.0, 8.0, 9.0, 13.0]})
+    result = add_age_band(age_df)
     assert result[col.AGE_BAND].to_list() == [
         "jovem",
         "jovem",
