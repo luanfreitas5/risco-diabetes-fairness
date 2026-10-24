@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -586,15 +586,15 @@
 <h1 id="arquitetura">Arquitetura<a class="headerlink" href="#arquitetura" title="Permanent link">&para;</a></h1>
 <p>O projeto segue organização por funcionalidade (não por camadas técnicas),
 baixo acoplamento e alta coesão. Os módulos em <code>src/</code> são importados como
-top-level (ex.: <code>from data.loader import load_raw</code>).</p>
+top-level (ex.: <code>from data.loader import load_bronze</code>).</p>
 <h2 id="fluxo-do-pipeline">Fluxo do pipeline<a class="headerlink" href="#fluxo-do-pipeline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>data/raw (CSV)
-   │  load_raw + validate_raw (Pandera)          [data, schemas]
+<div class="highlight"><pre><span></span><code>data/bronze (CSV, imutável + manifest.json)
+   │  load_bronze + validate_raw (Pandera)          [data, schemas]
    ▼
-engineer_features (AgeBand)                       [features]
-   │  validate_processed
+data/silver (parquet limpo, sem duplicatas)       [data.writer]
+   │  engineer_features (AgeBand) + validate_processed   [features, schemas]
    ▼
-data/processed (parquet + manifest)               [data.writer, utils.hashing]
+data/gold (parquet + manifest.json)               [data.writer, utils.hashing]
    │  split_data (estratificado)                  [data.splitter]
    ▼
 build_model (baseline + LightGBM, calibrado)      [models, preprocessing]
@@ -733,10 +733,10 @@ models/model.joblib (+ metadados)                 [models.persistence]
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

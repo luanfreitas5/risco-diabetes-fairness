@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -633,15 +633,14 @@
 <li>Python 3.10+</li>
 <li><a href="https://docs.astral.sh/uv/">uv</a> instalado</li>
 <li>Dataset do <a href="https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset">Kaggle</a>
-  em <code>data/raw/</code> (o arquivo <code>diabetes_binary_health_indicators_BRFSS2015.csv</code>).</li>
+  em <code>data/bronze/</code> (o arquivo <code>diabetes_binary_health_indicators_BRFSS2015.csv</code>).</li>
 </ul>
 <h2 id="instalacao">Instalação<a class="headerlink" href="#instalacao" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--dev<span class="w">            </span><span class="c1"># dependências de runtime + dev</span>
-uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>app<span class="w">      </span><span class="c1"># (opcional) dependências do dashboard Streamlit</span>
-make<span class="w"> </span>hooks<span class="w">               </span><span class="c1"># instala os hooks do pre-commit</span>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>install<span class="w">            </span><span class="c1"># uv sync --all-groups + hooks do pre-commit</span>
+make<span class="w"> </span>install-app<span class="w">        </span><span class="c1"># (opcional) inclui o dashboard Streamlit</span>
 </code></pre></div>
 <h2 id="pipeline">Pipeline<a class="headerlink" href="#pipeline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>preprocess<span class="w">   </span><span class="c1"># valida os dados e gera data/processed</span>
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>preprocess<span class="w">   </span><span class="c1"># bronze -&gt; silver -&gt; gold (data/gold)</span>
 make<span class="w"> </span>train<span class="w">        </span><span class="c1"># treina baseline + LightGBM e persiste o melhor modelo</span>
 make<span class="w"> </span>evaluate<span class="w">     </span><span class="c1"># métricas, calibração, curvas e SHAP -&gt; reports/</span>
 make<span class="w"> </span>audit<span class="w">        </span><span class="c1"># auditoria de justiça por subgrupo -&gt; reports/</span>
@@ -712,10 +711,10 @@ make<span class="w"> </span><span class="nb">test</span><span class="w">        
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
