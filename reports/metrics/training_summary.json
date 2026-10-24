@@ -1,0 +1,13 @@
+{
+  "active_model": "lightgbm",
+  "random_seed": 42,
+  "baseline_cv": {
+    "summary": "roc_auc: 0.8240 ± 0.0018 (IC 95%)",
+    "mean": 0.8240153023889499
+  },
+  "active_cv": {
+    "summary": "roc_auc: 0.8314 ± 0.0021 (IC 95%)",
+    "mean": 0.8314031933652697
+  },
+  "n_train": 152208
+}

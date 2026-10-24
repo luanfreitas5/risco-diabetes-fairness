@@ -20,7 +20,7 @@ from config.paths import CONFIGS_DIR
 class DataConfig(BaseModel):
     """Parâmetros de dados e particionamento."""
 
-    raw_file: str
+    bronze_file: str
     target: str = "Diabetes_binary"
     test_size: float = Field(gt=0, lt=1, default=0.20)
     valid_size: float = Field(gt=0, lt=1, default=0.20)
@@ -35,6 +35,15 @@ class EvaluationConfig(BaseModel):
     decision_threshold: float = Field(gt=0, lt=1, default=0.30)
     fairness_metric: str = "true_positive_rate"
     verbose: int = Field(ge=0, default=0)
+
+
+class ExperimentConfig(BaseModel):
+    """Rastreamento de experimentos com MLflow (backend SQLite)."""
+
+    enabled: bool = True
+    tracking_uri: str = "sqlite:///mlruns/mlflow.db"
+    experiment_name: str = "risco-diabetes-fairness"
+    require_clean_tree: bool = True
 
 
 class ProjectConfig(BaseModel):
@@ -101,6 +110,8 @@ class Settings(BaseSettings):
         Parâmetros de dados e splits.
     sensitive_features : list[str]
         Atributos sensíveis para auditoria de justiça.
+    experiment : ExperimentConfig
+        Rastreamento de experimentos (MLflow).
     evaluation : EvaluationConfig
         Parâmetros de avaliação.
     model : ModelParams
@@ -121,6 +132,7 @@ class Settings(BaseSettings):
     data: DataConfig
     sensitive_features: list[str] = Field(default_factory=list)
     evaluation: EvaluationConfig = EvaluationConfig()
+    experiment: ExperimentConfig = ExperimentConfig()
     model: ModelParams = ModelParams()
 
 

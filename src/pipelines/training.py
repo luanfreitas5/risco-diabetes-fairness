@@ -12,11 +12,13 @@ from pathlib import Path
 from config.logging import get_logger
 from config.paths import get_paths
 from config.settings import get_settings
-from data.loader import load_processed
+from data.loader import load_gold
 from data.splitter import DataSplit, split_data
 from evaluation.evaluator import cross_validate_model
+from experiment.tracker import log_cv_run
 from models.factory import build_model
 from models.persistence import save_model
+from utils.hashing import hash_dataframe
 from utils.io import save_json
 from utils.seed import seed_everything
 
@@ -47,13 +49,15 @@ def run_training() -> Path:
     paths = get_paths()
     paths.ensure_dirs()
 
-    processed_df = load_processed()
+    processed_df = load_gold()
     split: DataSplit = split_data(processed_df)
+    data_hash = hash_dataframe(processed_df)
 
     # 1) Baseline (benchmark): Regressão Logística.
     logger.info("Avaliando baseline (Regressão Logística) por validação cruzada.")
     baseline = build_model("logistic")
     baseline_cv = cross_validate_model(baseline, split.x_train, split.y_train)
+    log_cv_run("baseline-logistic", baseline, baseline_cv, data_hash=data_hash)
 
     # 2) Modelo ativo (ex.: LightGBM).
     active_name = settings.model.active_model
@@ -63,6 +67,9 @@ def run_training() -> Path:
 
     logger.info("Ajustando o modelo ativo no conjunto de treino.")
     model.fit(split.x_train, split.y_train)
+    run_id = log_cv_run(
+        active_name, model, active_cv, data_hash=data_hash, x_example=split.x_train, fitted=True
+    )
 
     metadata = {
         "active_model": active_name,
@@ -70,6 +77,8 @@ def run_training() -> Path:
         "baseline_cv": {"summary": baseline_cv.summary(), "mean": baseline_cv.mean},
         "active_cv": {"summary": active_cv.summary(), "mean": active_cv.mean},
         "n_train": len(split.x_train),
+        "data_hash": data_hash,
+        "mlflow_run_id": run_id,
     }
     model_path = save_model(model, paths.models / MODEL_FILE, metadata=metadata)
     save_json(metadata, paths.metrics / "training_summary.json")

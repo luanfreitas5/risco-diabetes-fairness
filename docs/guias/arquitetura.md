@@ -2,18 +2,18 @@
 
 O projeto segue organização por funcionalidade (não por camadas técnicas),
 baixo acoplamento e alta coesão. Os módulos em `src/` são importados como
-top-level (ex.: `from data.loader import load_raw`).
+top-level (ex.: `from data.loader import load_bronze`).
 
 ## Fluxo do pipeline
 
 ```
-data/raw (CSV)
-   │  load_raw + validate_raw (Pandera)          [data, schemas]
+data/bronze (CSV, imutável + manifest.json)
+   │  load_bronze + validate_raw (Pandera)          [data, schemas]
    ▼
-engineer_features (AgeBand)                       [features]
-   │  validate_processed
+data/silver (parquet limpo, sem duplicatas)       [data.writer]
+   │  engineer_features (AgeBand) + validate_processed   [features, schemas]
    ▼
-data/processed (parquet + manifest)               [data.writer, utils.hashing]
+data/gold (parquet + manifest.json)               [data.writer, utils.hashing]
    │  split_data (estratificado)                  [data.splitter]
    ▼
 build_model (baseline + LightGBM, calibrado)      [models, preprocessing]

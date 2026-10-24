@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from config.logging import get_logger
 from config.paths import get_paths
-from data.loader import load_processed
+from data.loader import load_gold
 from data.splitter import split_data
 from fairness.audit import FairnessReport, audit_fairness
 from models.persistence import load_model
@@ -39,7 +39,7 @@ def run_fairness_audit() -> FairnessReport:
     seed_everything()
 
     model, _ = load_model(paths.models / MODEL_FILE)
-    fairness_audit_df = load_processed()
+    fairness_audit_df = load_gold()
     split = split_data(fairness_audit_df)
 
     y_proba = model.predict_proba(split.x_test)[:, 1]

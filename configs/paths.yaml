@@ -4,10 +4,10 @@
 # =============================================================================
 
 data:
-  raw: data/raw
-  external: data/external
-  interim: data/interim
-  processed: data/processed
+  # Arquitetura medalhão. A camada bronze nunca é modificada.
+  bronze: data/bronze   # como recebido (imutável) + manifest.json
+  silver: data/silver   # limpo, tipado e validado (contrato bruto)
+  gold: data/gold       # features prontas para modelagem + manifest.json
 
 models: models
 

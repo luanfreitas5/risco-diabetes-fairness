@@ -1,8 +1,11 @@
-"""Pipeline de preparação de dados: raw -> processed.
+"""Pipeline de preparação de dados na arquitetura medalhão: bronze -> silver -> gold.
 
-Carrega e valida o dataset bruto, aplica a engenharia de features, valida o
-contrato processado e persiste o resultado em parquet, registrando o hash dos
-dados para rastreabilidade.
+- **bronze:** CSV exatamente como recebido (imutável); apenas lido, com hash
+  registrado em ``data/bronze/manifest.json``.
+- **silver:** dados limpos, tipados, sem duplicatas e validados pelo contrato
+  bruto (Pandera), persistidos em parquet.
+- **gold:** features de modelagem (engenharia de atributos), validadas pelo
+  contrato processado, com manifesto de hash para rastreabilidade.
 """
 
 from __future__ import annotations
@@ -11,31 +14,32 @@ from pathlib import Path
 
 from config.logging import get_logger
 from config.paths import get_paths
-from data.loader import load_raw
+from data.loader import load_bronze, resolve_bronze_path
 from data.writer import write_parquet
 from features.engineering import engineer_features
-from schemas.dataset import validate_processed
-from utils.hashing import hash_dataframe
+from schemas.dataset import validate_processed, validate_raw
+from utils.hashing import hash_dataframe, hash_file
 from utils.io import save_json
 from utils.numbers import to_float
 
 logger = get_logger(__name__)
 
-PROCESSED_FILE = "diabetes_processed.parquet"
+SILVER_FILE = "diabetes_silver.parquet"
+GOLD_FILE = "diabetes_gold.parquet"
 
 
-def run_preprocessing(raw_file: str | None = None) -> Path:
-    """Executa o pipeline de preparação e persiste o dataset processado.
+def run_preprocessing(bronze_file: str | None = None) -> Path:
+    """Executa bronze -> silver -> gold e persiste o dataset gold.
 
     Parameters
     ----------
-    raw_file : str, optional
-        Nome do arquivo bruto em ``data/raw``. Se ``None``, usa o do config.
+    bronze_file : str, optional
+        Nome do arquivo em ``data/bronze``. Se ``None``, usa o do config.
 
     Returns
     -------
     Path
-        Caminho do parquet processado gravado.
+        Caminho do parquet gold gravado.
 
     Examples
     --------
@@ -45,18 +49,29 @@ def run_preprocessing(raw_file: str | None = None) -> Path:
     paths = get_paths()
     paths.ensure_dirs()
 
-    raw = load_raw(raw_file)
-    processed = engineer_features(raw)
-    processed = validate_processed(processed)
+    bronze = load_bronze(bronze_file)
+    bronze_path = resolve_bronze_path(bronze_file)
+    if bronze_path.exists():
+        save_json(
+            {"file": bronze_path.name, "sha256": hash_file(bronze_path)},
+            paths.data_bronze / "manifest.json",
+        )
 
-    output = write_parquet(processed, paths.data_processed / PROCESSED_FILE)
+    # Silver: remove duplicatas exatas e valida o contrato de dados.
+    silver = validate_raw(bronze.unique(maintain_order=True))
+    logger.info("Silver: %d linhas (bronze: %d)", silver.height, bronze.height)
+    write_parquet(silver, paths.data_silver / SILVER_FILE)
+
+    # Gold: engenharia de features e contrato processado.
+    gold = validate_processed(engineer_features(silver))
+    output = write_parquet(gold, paths.data_gold / GOLD_FILE)
 
     manifest = {
-        "n_rows": processed.height,
-        "n_cols": processed.width,
-        "target_prevalence": to_float(processed["Diabetes_binary"].mean()),
-        "data_hash": hash_dataframe(processed),
+        "n_rows": gold.height,
+        "n_cols": gold.width,
+        "target_prevalence": to_float(gold["Diabetes_binary"].mean()),
+        "data_hash": hash_dataframe(gold),
     }
-    save_json(manifest, paths.data_processed / "manifest.json")
+    save_json(manifest, paths.data_gold / "manifest.json")
     logger.info("== Pré-processamento concluído | hash=%s ==", manifest["data_hash"][:12])
     return output

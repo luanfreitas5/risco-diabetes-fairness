@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from config.logging import get_logger
 from config.paths import get_paths
-from data.loader import load_processed
+from data.loader import load_gold
 from data.splitter import split_data
 from evaluation.calibration import compute_calibration_curve
 from evaluation.evaluator import evaluate_holdout
@@ -51,7 +51,7 @@ def run_evaluation() -> dict[str, float]:
     seed_everything()
 
     model, _ = load_model(paths.models / MODEL_FILE)
-    processed_df = load_processed()
+    processed_df = load_gold()
     split = split_data(processed_df)
 
     y_proba = model.predict_proba(split.x_test)[:, 1]

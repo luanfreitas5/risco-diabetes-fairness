@@ -18,7 +18,7 @@ import argparse
 from collections.abc import Callable
 from warnings import filterwarnings
 
-from config.logging import get_logger
+from config.logging import configure_logging, get_logger
 from config.settings import get_settings
 from pipelines.evaluation import run_evaluation
 from pipelines.fairness import run_fairness_audit
@@ -79,7 +79,14 @@ def main() -> None:
         default=None,
         help="Executa apenas uma etapa específica (padrão: todas).",
     )
+    parser.add_argument(
+        "--log-level",
+        choices=("DEBUG", "INFO", "WARNING", "ERROR"),
+        default=None,
+        help="Sobrescreve o nível de log de configs/logging.yaml.",
+    )
     args = parser.parse_args()
+    configure_logging(level=args.log_level)  # única configuração de logging do projeto
     stages = (args.stage,) if args.stage else STAGES
     run_pipeline(stages)
 

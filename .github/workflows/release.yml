@@ -39,7 +39,7 @@ jobs:
           cache-dependency-glob: "uv.lock"
           python-version: "3.12"
 
-      - run: uv sync --dev
+      - run: uv sync --all-groups --no-group profiling
 
       - name: Configurar identidade do git
         run: |

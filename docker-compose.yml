@@ -1,38 +1,49 @@
 # =============================================================================
-# docker-compose.yml — orquestra o dashboard e (opcionalmente) um servidor
-# MLflow para tracking de experimentos.
+# docker-compose.yml — dashboard Streamlit + (perfil `tracking`) servidor MLflow.
+# `docker compose config -q` valida o arquivo. Segredos vêm do .env (nunca commitado).
 # =============================================================================
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    image: risco-diabetes-fairness:latest
-    container_name: risco-diabetes-app
-    ports:
-      - "8501:8501"
+    image: risco-diabetes-fairness:${APP_VERSION:-dev}
     volumes:
-      # Monta modelos e dados processados (gerados fora do container).
-      - ./models:/app/models:ro
-      - ./data/processed:/app/data/processed:ro
+      - ./models:/app/models:ro # modelo fora da imagem, somente leitura
+    ports:
+      - "127.0.0.1:8501:8501" # só na máquina local
+    read_only: true # sistema de arquivos imutável; escrita só nos tmpfs abaixo
+    tmpfs:
+      - /tmp
+      - /app/logs:uid=10001,gid=10001 # configure_logging cria o arquivo de log aqui
     restart: unless-stopped
 
-  # Servidor de tracking de experimentos (opcional — habilite conforme a necessidade).
+  # Servidor de tracking de experimentos (opcional): docker compose --profile tracking up
   mlflow:
-    image: ghcr.io/mlflow/mlflow:v2.15.1
-    container_name: risco-diabetes-mlflow
+    build:
+      context: .
+      dockerfile: docker/mlflow.Dockerfile
     profiles: ["tracking"]
-    command: >
-      mlflow server
-      --host 0.0.0.0
-      --port 5000
-      --backend-store-uri sqlite:////mlflow/mlflow.db
-      --default-artifact-root /mlflow/artifacts
-    ports:
-      - "5000:5000"
+    command:
+      - mlflow
+      - server
+      - --host=0.0.0.0
+      - --port=5000
+      - --backend-store-uri=sqlite:////mlflow/mlflow.db # 4 barras = caminho absoluto, dentro do volume
+      - --artifacts-destination=/mlflow/artifacts
+      - --serve-artifacts
+      # MLflow >= 3.5 valida o Host: inclua o nome do serviço ou clientes recebem 403
+      # - --allowed-hosts=mlflow:5000,localhost:5000
     volumes:
       - mlflow-data:/mlflow
+    ports:
+      - "127.0.0.1:5000:5000" # sem autenticação: nunca publique em 0.0.0.0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     restart: unless-stopped
 
 volumes:

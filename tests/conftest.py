@@ -32,10 +32,9 @@ def fake_paths(tmp_path: Path) -> ProjectPaths:
     """
     return ProjectPaths(
         root=tmp_path,
-        data_raw=tmp_path / "data" / "raw",
-        data_external=tmp_path / "data" / "external",
-        data_interim=tmp_path / "data" / "interim",
-        data_processed=tmp_path / "data" / "processed",
+        data_bronze=tmp_path / "data" / "bronze",
+        data_silver=tmp_path / "data" / "silver",
+        data_gold=tmp_path / "data" / "gold",
         models=tmp_path / "models",
         reports=tmp_path / "reports",
         figures=tmp_path / "reports" / "figures",
@@ -91,3 +90,14 @@ def synthetic_raw() -> pl.DataFrame:
         "Income": rng.integers(1, 9, N_ROWS).astype(float),
     }
     return pl.DataFrame(data).select(col.ALL_COLUMNS)
+
+
+@pytest.fixture(autouse=True)
+def disable_experiment_tracking(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Desliga o MLflow nos testes, exceto onde o teste o habilita explicitamente.
+
+    Evita criar bancos SQLite e exigir árvore Git limpa durante a suíte.
+    """
+    from config.settings import get_settings
+
+    monkeypatch.setattr(get_settings().experiment, "enabled", False)

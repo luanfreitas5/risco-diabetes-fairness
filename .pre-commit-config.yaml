@@ -1,12 +1,12 @@
 # =============================================================================
-# .pre-commit-config.yaml — apenas checagens RÁPIDAS, para não criar atrito no
-# commit. Type checking (basedPyright), segurança (bandit) e complexidade
-# (xenon/radon) rodam no CI, conforme o CLAUDE.md.
+# .pre-commit-config.yaml — apenas verificações RÁPIDAS (segundos, sobre arquivos
+# staged). Checagens pesadas (tipos, segurança, complexidade, suíte completa)
+# rodam no CI e em `make check`; hook lento incentiva `--no-verify`.
 #
 # Setup:
-#   uv run pre-commit install
-#   uv run pre-commit install --hook-type commit-msg   # ativa o commitizen
-#   uv run detect-secrets scan > .secrets.baseline      # gera o baseline
+#   uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+#   uv run pre-commit autoupdate                         # atualiza os `rev` fixados
+#   uv run detect-secrets scan > .secrets.baseline       # gera o baseline
 # =============================================================================
 
 default_install_hook_types: [pre-commit, commit-msg]
@@ -16,14 +16,14 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-toml
-      - id: check-merge-conflict
       - id: check-added-large-files
         args: ["--maxkb=1000"]   # bloqueia commit de dados/modelos grandes
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
       - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
 
   # --- Ruff: lint + format -------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -53,7 +53,7 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
-  # --- Smoke tests rápidos (local) -----------------------------------------
+  # --- Smoke tests rápidos (< 10 s) ----------------------------------------
   - repo: local
     hooks:
       - id: pytest-smoke
@@ -61,4 +61,4 @@ repos:
         entry: uv run pytest -m smoke -q --no-cov
         language: system
         pass_filenames: false
-        stages: [pre-commit]
+        types: [python]

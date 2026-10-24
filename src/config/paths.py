@@ -25,8 +25,9 @@ class ProjectPaths:
     ----------
     root : Path
         Raiz do projeto.
-    data_raw, data_external, data_interim, data_processed : Path
-        Diretórios dos estágios de dados.
+    data_bronze, data_silver, data_gold : Path
+        Camadas medalhão: bronze (como recebido, imutável), silver (limpo,
+        tipado e validado) e gold (pronto para modelagem).
     models : Path
         Diretório de modelos persistidos.
     reports, figures, metrics, model_cards, datasheets : Path
@@ -36,10 +37,9 @@ class ProjectPaths:
     """
 
     root: Path
-    data_raw: Path
-    data_external: Path
-    data_interim: Path
-    data_processed: Path
+    data_bronze: Path
+    data_silver: Path
+    data_gold: Path
     models: Path
     reports: Path
     figures: Path
@@ -56,8 +56,8 @@ class ProjectPaths:
         >>> get_paths().ensure_dirs()
         """
         for path in (
-            self.data_interim,
-            self.data_processed,
+            self.data_silver,
+            self.data_gold,
             self.models,
             self.figures,
             self.metrics,
@@ -90,8 +90,8 @@ def get_paths(config_path: Path | None = None) -> ProjectPaths:
     Examples
     --------
     >>> paths = get_paths()
-    >>> paths.data_raw.name
-    'raw'
+    >>> paths.data_bronze.name
+    'bronze'
     """
     path = config_path or (CONFIGS_DIR / "paths.yaml")
     if not path.exists():
@@ -106,10 +106,9 @@ def get_paths(config_path: Path | None = None) -> ProjectPaths:
     reports = cfg["reports"]
     return ProjectPaths(
         root=PROJECT_ROOT,
-        data_raw=resolve(data["raw"]),
-        data_external=resolve(data["external"]),
-        data_interim=resolve(data["interim"]),
-        data_processed=resolve(data["processed"]),
+        data_bronze=resolve(data["bronze"]),
+        data_silver=resolve(data["silver"]),
+        data_gold=resolve(data["gold"]),
         models=resolve(cfg["models"]),
         reports=resolve(reports["root"]),
         figures=resolve(reports["figures"]),

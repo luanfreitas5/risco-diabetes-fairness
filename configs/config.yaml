@@ -12,9 +12,9 @@ random_seed: 42
 
 # --- Dados -------------------------------------------------------------------
 data:
-  # Arquivo bruto primário (survey BRFSS 2015, versão binária desbalanceada,
+  # Arquivo bronze primário (survey BRFSS 2015, versão binária desbalanceada,
   # ~253k respostas, prevalência ~14%). É a versão realista para triagem.
-  raw_file: diabetes_binary_health_indicators_BRFSS2015.csv
+  bronze_file: diabetes_binary_health_indicators_BRFSS2015.csv
   target: Diabetes_binary
   # Fração destinada ao conjunto de teste (holdout) e à validação.
   test_size: 0.20
@@ -40,3 +40,13 @@ evaluation:
   # Métrica de justiça a ser reportada por subgrupo.
   fairness_metric: true_positive_rate
   verbose: 0
+
+# --- Rastreamento de experimentos (MLflow) ----------------------------------
+# Backend SEMPRE em banco (SQLite); nunca o file store ./mlruns. Em container,
+# aponte MLFLOW_TRACKING_URI para o servidor (ver docker-compose.yml).
+experiment:
+  enabled: true
+  tracking_uri: sqlite:///mlruns/mlflow.db
+  experiment_name: risco-diabetes-fairness
+  # Recusa registrar run com alterações não commitadas (o SHA mentiria).
+  require_clean_tree: true

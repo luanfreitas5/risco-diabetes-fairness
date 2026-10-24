@@ -27,5 +27,5 @@ def test_sensitive_features_configured() -> None:
 def test_paths_resolve_under_project_root() -> None:
     """Todos os caminhos são resolvidos sob a raiz do projeto."""
     paths = get_paths()
-    assert paths.data_raw.is_absolute()
+    assert paths.data_bronze.is_absolute()
     assert paths.root in paths.figures.parents

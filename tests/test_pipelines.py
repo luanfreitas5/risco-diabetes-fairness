@@ -1,6 +1,6 @@
 """Testes de integração dos pipelines de orquestração.
 
-Cada pipeline é testado isoladamente: ``get_paths``/``load_processed``/
+Cada pipeline é testado isoladamente: ``get_paths``/``load_gold``/
 ``load_model`` são substituídos (monkeypatch) por versões que apontam para um
 diretório temporário e para os dados sintéticos da sessão, evitando tocar os
 diretórios reais do projeto. Etapas pesadas já cobertas por testes dedicados
@@ -51,18 +51,20 @@ def fitted_model(synthetic_raw: pl.DataFrame):
 
 
 @pytest.mark.integration
-def test_run_preprocessing_writes_processed_parquet_and_manifest(
+def test_run_preprocessing_writes_silver_gold_and_manifest(
     synthetic_raw: pl.DataFrame, fake_paths: ProjectPaths, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """O pipeline de pré-processamento valida, persiste e registra o manifesto."""
     monkeypatch.setattr(preprocessing_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(preprocessing_pipeline, "load_raw", lambda raw_file=None: synthetic_raw)
+    monkeypatch.setattr(preprocessing_pipeline, "load_bronze", lambda bronze_file=None: synthetic_raw)
+    monkeypatch.setattr(preprocessing_pipeline, "resolve_bronze_path", lambda bronze_file=None: fake_paths.data_bronze / "inexistente.csv")
 
     output = preprocessing_pipeline.run_preprocessing()
 
-    assert output == fake_paths.data_processed / preprocessing_pipeline.PROCESSED_FILE
+    assert output == fake_paths.data_gold / preprocessing_pipeline.GOLD_FILE
     assert output.exists()
-    assert (fake_paths.data_processed / "manifest.json").exists()
+    assert (fake_paths.data_gold / "manifest.json").exists()
+    assert (fake_paths.data_silver / preprocessing_pipeline.SILVER_FILE).exists()
     assert "AgeBand" in pl.read_parquet(output).columns
 
 
@@ -75,7 +77,7 @@ def test_run_training_persists_active_model_and_summary(
     fake_cv = CrossValResult(metric="roc_auc", scores=[0.8, 0.81], mean=0.805, std=0.005, ci95=0.01)
 
     monkeypatch.setattr(training_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(training_pipeline, "load_processed", lambda: processed)
+    monkeypatch.setattr(training_pipeline, "load_gold", lambda: processed)
     monkeypatch.setattr(training_pipeline, "cross_validate_model", lambda *a, **k: fake_cv)
 
     model_path = training_pipeline.run_training()
@@ -94,7 +96,7 @@ def test_run_evaluation_generates_metrics_and_figures(
     fake_shap = ShapResult(values=np.zeros((1, 1)), feature_names=["BMI"], data=np.zeros((1, 1)))
 
     monkeypatch.setattr(evaluation_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(evaluation_pipeline, "load_processed", lambda: processed)
+    monkeypatch.setattr(evaluation_pipeline, "load_gold", lambda: processed)
     monkeypatch.setattr(evaluation_pipeline, "load_model", lambda path: (model, {}))
     monkeypatch.setattr(evaluation_pipeline, "compute_shap_values", lambda model, x: fake_shap)
     monkeypatch.setattr(
@@ -123,7 +125,7 @@ def test_run_evaluation_survives_shap_failure(
         raise ValueError("SHAP indisponível neste setup")
 
     monkeypatch.setattr(evaluation_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(evaluation_pipeline, "load_processed", lambda: processed)
+    monkeypatch.setattr(evaluation_pipeline, "load_gold", lambda: processed)
     monkeypatch.setattr(evaluation_pipeline, "load_model", lambda path: (model, {}))
     monkeypatch.setattr(evaluation_pipeline, "compute_shap_values", _raise_value_error)
 
@@ -141,7 +143,7 @@ def test_run_fairness_audit_generates_report_and_figures(
     model, processed = fitted_model
 
     monkeypatch.setattr(fairness_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(fairness_pipeline, "load_processed", lambda: processed)
+    monkeypatch.setattr(fairness_pipeline, "load_gold", lambda: processed)
     monkeypatch.setattr(fairness_pipeline, "load_model", lambda path: (model, {}))
 
     report = fairness_pipeline.run_fairness_audit()

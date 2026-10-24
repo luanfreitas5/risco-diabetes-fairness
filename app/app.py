@@ -18,6 +18,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+from config.logging import configure_logging
 from config.paths import get_paths
 from config.settings import get_settings
 from constants import columns as col
@@ -154,6 +155,7 @@ def _collect_inputs() -> dict[str, float]:
 
 def main() -> None:
     """Renderiza o dashboard de triagem de risco de diabetes."""
+    configure_logging()  # única configuração de logging; idempotente entre reruns do Streamlit
     settings = get_settings()
     st.set_page_config(page_title="Triagem de Risco de Diabetes", page_icon="🩺", layout="wide")
     st.title("🩺 Triagem de Risco de Diabetes — IA Responsável")

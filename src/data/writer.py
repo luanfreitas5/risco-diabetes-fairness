@@ -28,7 +28,7 @@ def write_parquet(df: pl.DataFrame, path: Path) -> Path:
 
     Examples
     --------
-    >>> write_parquet(df, Path("data/processed/diabetes_processed.parquet"))  # doctest: +SKIP
+    >>> write_parquet(df, Path("data/gold/diabetes_gold.parquet"))  # doctest: +SKIP
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)

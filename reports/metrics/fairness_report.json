@@ -1,0 +1,175 @@
+{
+  "by_group": {
+    "Sex": {
+      "0.0": {
+        "recall": 0.47327001356852105,
+        "precision": 0.43232523549826474,
+        "selection_rate": 0.14139006694472678,
+        "true_positive_rate": 0.47327001356852105,
+        "false_positive_rate": 0.09216775336070192
+      },
+      "1.0": {
+        "recall": 0.4648345153664303,
+        "precision": 0.43155006858710565,
+        "selection_rate": 0.16415221796892593,
+        "true_positive_rate": 0.4648345153664303,
+        "false_positive_rate": 0.11008979331597683
+      }
+    },
+    "AgeBand": {
+      "idoso": {
+        "recall": 0.5121349238996298,
+        "precision": 0.42923633856231685,
+        "selection_rate": 0.23556403800860878,
+        "true_positive_rate": 0.5121349238996298,
+        "false_positive_rate": 0.16752681643392026
+      },
+      "jovem": {
+        "recall": 0.15891472868217055,
+        "precision": 0.5694444444444444,
+        "selection_rate": 0.009291521486643438,
+        "true_positive_rate": 0.15891472868217055,
+        "false_positive_rate": 0.004138299292484314
+      },
+      "meia-idade": {
+        "recall": 0.4032837352488456,
+        "precision": 0.43521594684385384,
+        "selection_rate": 0.09836065573770492,
+        "true_positive_rate": 0.4032837352488456,
+        "false_positive_rate": 0.06214964660004874
+      }
+    },
+    "Income": {
+      "1.0": {
+        "recall": 0.6442105263157895,
+        "precision": 0.46788990825688076,
+        "selection_rate": 0.3369397217928903,
+        "true_positive_rate": 0.6442105263157895,
+        "false_positive_rate": 0.2373806275579809
+      },
+      "2.0": {
+        "recall": 0.6571428571428571,
+        "precision": 0.47045454545454546,
+        "selection_rate": 0.37849462365591396,
+        "true_positive_rate": 0.6571428571428571,
+        "false_positive_rate": 0.27492625368731566
+      },
+      "3.0": {
+        "recall": 0.5949008498583569,
+        "precision": 0.44538706256627786,
+        "selection_rate": 0.2982289690069576,
+        "true_positive_rate": 0.5949008498583569,
+        "false_positive_rate": 0.21294788273615636
+      },
+      "4.0": {
+        "recall": 0.5802310654685494,
+        "precision": 0.43378119001919385,
+        "selection_rate": 0.2611528822055138,
+        "true_positive_rate": 0.5802310654685494,
+        "false_positive_rate": 0.18374338212394892
+      },
+      "5.0": {
+        "recall": 0.5123595505617977,
+        "precision": 0.4230055658627087,
+        "selection_rate": 0.2083494395052184,
+        "true_positive_rate": 0.5123595505617977,
+        "false_positive_rate": 0.14519140989729226
+      },
+      "6.0": {
+        "recall": 0.4175506268081003,
+        "precision": 0.39579524680073125,
+        "selection_rate": 0.15025408597720094,
+        "true_positive_rate": 0.4175506268081003,
+        "false_positive_rate": 0.10586162716207559
+      },
+      "7.0": {
+        "recall": 0.38468634686346864,
+        "precision": 0.4165834165834166,
+        "selection_rate": 0.11466208476517754,
+        "true_positive_rate": 0.38468634686346864,
+        "false_positive_rate": 0.07637980643473712
+      },
+      "8.0": {
+        "recall": 0.2854223433242507,
+        "precision": 0.42451874366767983,
+        "selection_rate": 0.05443114763139028,
+        "true_positive_rate": 0.2854223433242507,
+        "false_positive_rate": 0.034083408340834086
+      }
+    },
+    "Education": {
+      "1.0": {
+        "recall": 0.8571428571428571,
+        "precision": 0.5,
+        "selection_rate": 0.375,
+        "true_positive_rate": 0.8571428571428571,
+        "false_positive_rate": 0.24
+      },
+      "2.0": {
+        "recall": 0.7058823529411765,
+        "precision": 0.44571428571428573,
+        "selection_rate": 0.44025157232704404,
+        "true_positive_rate": 0.7058823529411765,
+        "false_positive_rate": 0.33797909407665505
+      },
+      "3.0": {
+        "recall": 0.6051502145922747,
+        "precision": 0.45410628019323673,
+        "selection_rate": 0.32857142857142857,
+        "true_positive_rate": 0.6051502145922747,
+        "false_positive_rate": 0.238061797752809
+      },
+      "4.0": {
+        "recall": 0.5109326193663543,
+        "precision": 0.4322385805964515,
+        "selection_rate": 0.21178445794691397,
+        "true_positive_rate": 0.5109326193663543,
+        "false_positive_rate": 0.1464887503652479
+      },
+      "5.0": {
+        "recall": 0.48502139800285304,
+        "precision": 0.42857142857142855,
+        "selection_rate": 0.16941913439635536,
+        "true_positive_rate": 0.48502139800285304,
+        "false_positive_rate": 0.11385516952699874
+      },
+      "6.0": {
+        "recall": 0.34859675036927623,
+        "precision": 0.4247150569886023,
+        "selection_rate": 0.07766854586963612,
+        "true_positive_rate": 0.34859675036927623,
+        "false_positive_rate": 0.04935158501440922
+      }
+    }
+  },
+  "disparities": {
+    "Sex": {
+      "recall_difference": 0.008435498202090774,
+      "recall_ratio": 0.9821761405534951,
+      "selection_rate_difference": 0.02276215102419915,
+      "tpr_difference": 0.008435498202090774,
+      "fpr_difference": 0.017922039955274915
+    },
+    "AgeBand": {
+      "recall_difference": 0.35322019521745923,
+      "recall_ratio": 0.31029855857538685,
+      "selection_rate_difference": 0.22627251652196534,
+      "tpr_difference": 0.35322019521745923,
+      "fpr_difference": 0.16338851714143593
+    },
+    "Income": {
+      "recall_difference": 0.37172051381860644,
+      "recall_ratio": 0.43433834853690323,
+      "selection_rate_difference": 0.3240634760245237,
+      "tpr_difference": 0.37172051381860644,
+      "fpr_difference": 0.24084284534648157
+    },
+    "Education": {
+      "recall_difference": 0.5085461067735808,
+      "recall_ratio": 0.40669620876415563,
+      "selection_rate_difference": 0.3625830264574079,
+      "tpr_difference": 0.5085461067735808,
+      "fpr_difference": 0.2886275090622458
+    }
+  }
+}

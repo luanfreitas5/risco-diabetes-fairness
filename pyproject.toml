@@ -66,6 +66,8 @@ dependencies = [
 ]
 
 [tool.uv]
+package = false  # aplicação, não biblioteca; código em src/ via pythonpath
+default-groups = ["dev", "tracking"]
 required-environments = [
     "sys_platform == 'win32' and platform_machine == 'AMD64'",
     "sys_platform == 'linux' and platform_machine == 'x86_64'",
@@ -94,56 +96,44 @@ app = [
 ]
 
 
-# --- Dependências de desenvolvimento (não publicadas; PEP 735) --------------
+# --- Grupos de dependências (PEP 735): runtime fica em [project].dependencies ---
 [dependency-groups]
+# Padrão do `uv sync`: ferramentas do dia a dia (lint, testes, hooks).
 dev = [
-    # Lint + format
-    "ruff>=0.16.0",                    # Um linter e formatador de código Python extremamente rápido - substitui flake8/isort/black
-    # Type checking (roda no CI, não no pre-commit)
-    "basedpyright>=1.13",           # Um type checker estático para Python, baseado no Pyright da Microsoft - substitui mypy
-    # Segurança (roda no CI)
-    "bandit>=1.7",                  # Um analisador de segurança para código Python
-    "pip-audit>=2.7",               # Um auditor de segurança para dependências Python (substitui o safety, que arrastava nltk vulnerável)
-    "detect-secrets>=1.5",          # Um detector de segredos em código Python
-    # Qualidade / complexidade / docstrings
-    "vulture>=2.11",                # Um verificador de código morto para Python
-    "refurb>=2.0",                  # Um utilitário para refatoração de código Python
-    "xenon>=0.9",                   # Um analisador de complexidade para Python
-    "radon>=6.0",                   # Um analisador de complexidade para Python
-    "interrogate>=1.7",             # Um verificador de docstrings para Python
-    # Testes
-    "pytest>=8.2",                  # Um framework de teste para Python
-    "pytest-cov>=5.0",              # Um plugin para pytest que fornece cobertura de código
-    "hypothesis>=6.100",            # Um framework de teste property-based para Python
-    # Notebooks
-    "nbqa>=1.8",                    # Um utilitário para aplicar linters a notebooks do Jupyter
-    "nbstripout>=0.7",              # Um utilitário para remover saídas e metadados de notebooks do Jupyter
-    # Workflow
-    "pre-commit>=4.6.1",              # Um framework para gerenciar hooks de commit no Git
-    "commitizen>=4.16.5",             # Um utilitário para manter o histórico de commits consistente
-    # Documentação
-    "mkdocs-material>=9.7.7",         # Um tema para MkDocs
-    "mkdocstrings[python]>=0.25",   # Um plugin para MkDocs que gera documentação a partir de docstrings
-    # Profiling (use sob demanda)
-    "scalene>=1.5",                 # Um profiler de performance para Python
-    # Ferramentas para rodar Data Wrangler no Vscode
-    "pip>=26.1.2",                  # Um gerenciador de pacotes para Python
-    "ipykernel>=7.3.0",             # Um kernel para Jupyter que executa código Python             # Um conjunto de widgets interativos para Jupyter
+    "ruff>=0.16.0",                 # Lint + format - substitui flake8/isort/black
+    "basedpyright>=1.13",           # Type checking estático (roda no CI e em `make check`)
+    "pytest>=8.2",                  # Framework de testes
+    "pytest-cov>=5.0",              # Cobertura de testes
+    "hypothesis>=6.100",            # Testes property-based
+    "detect-secrets>=1.5",          # Detecção de segredos (hook do pre-commit)
+    "pre-commit>=4.6.1",            # Hooks de commit
+    "commitizen>=4.16.5",           # Conventional Commits + CHANGELOG
+    "nbstripout>=0.7",              # Remove outputs de notebooks
+    "nbqa>=1.8",                    # Aplica linters a notebooks
+    "ipykernel>=7.3.0",             # Kernel Jupyter / Data Wrangler no VSCode
     "ipywidgets>=8.1.8",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# Checagens pesadas: CI e `make check` (nunca no pre-commit).
+quality = [
+    "bandit[toml]>=1.7",            # Análise de segurança
+    "pip-audit>=2.7",               # Vulnerabilidades em dependências
+    "vulture>=2.11",                # Código morto
+    "refurb>=2.0",                  # Modernização de código
+    "xenon>=0.9",                   # Limites de complexidade
+    "radon>=6.0",                   # Métricas de complexidade
+    "interrogate>=1.7",             # Cobertura de docstrings
+]
+# Rastreamento de experimentos: SQLite local ou servidor MLflow (ver docker-compose.yml).
+tracking = ["mlflow>=3.1"]
+docs = [
+    "mkdocs-material>=9.7.7",       # Tema do MkDocs
+    "mkdocstrings[python]>=0.25",   # API de referência a partir das docstrings
+]
+# Sob demanda: `uv sync --group profiling`.
+profiling = ["scalene>=1.5"]
 
 [project.urls]
 Homepage = "https://github.com/luanfreitas5/risco-diabetes-fairness"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
-
-[project.scripts]
-diabetes = "src.main:main"
 
 
 # =============================================================================
@@ -174,12 +164,16 @@ select = [
     "RUF",    # regras específicas do próprio Ruff
     "PL",     # pylint (subconjunto)
     "TRY",    # tryceratops — boas práticas de exception handling
+    "S",      # flake8-bandit (segurança)
+    "D",      # pydocstyle (docstrings NumPy)
 ]
 ignore = [
     "PLR0913", # muitos argumentos em função — comum em pipelines de ML
     "PLR2004", # "magic value" em comparação — comum em thresholds de modelo
     "TRY003",  # mensagem longa em exceção customizada
     "PLR0917", # muitos parâmetros em função — comum em pipelines de ML
+    "D203",    # conflita com D211
+    "D213",    # conflita com D212 (convenção numpy)
 ]
 
 [tool.ruff.lint.isort]
@@ -189,7 +183,7 @@ known-first-party = ["src"]
 convention = "numpy"  # docstrings no formato NumPy
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ARG", "PLR2004"]        # fixtures e valores fixos em testes
+"tests/*" = ["ARG", "PLR2004", "S101", "D"]  # asserts, fixtures e docstrings livres em testes
 "notebooks/*" = ["E402", "F401"]      # imports fora de ordem/não usados em notebooks
 
 [tool.ruff.format]
@@ -235,12 +229,7 @@ ignore = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = [
-    "--strict-markers",
-    "--cov=src",
-    "--cov-report=term-missing",
-    "--cov-report=xml",
-]
+addopts = ["-ra", "--strict-markers"]  # cobertura: `make test` e CI passam --cov
 filterwarnings = [
     # Avisos internos de bibliotecas de terceiros, fora do nosso controle.
     "ignore:.*set_(bad|over|under) function will be deprecated.*:PendingDeprecationWarning:shap.*",
