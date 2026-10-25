@@ -1,4 +1,4 @@
-# 🩺 Predição de Risco de Diabetes com Auditoria de Justiça: AUC 0,83, mas com recall desigual entre subgrupos
+# 🩺 Risco de Diabetes com Auditoria de Justiça: AUC 0,83, mas com recall desigual entre subgrupos
 
 [![CI](https://github.com/luanfreitas5/risco-diabetes-fairness/actions/workflows/ci.yml/badge.svg)](https://github.com/luanfreitas5/risco-diabetes-fairness/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/luanfreitas5/risco-diabetes-fairness/graph/badge.svg)](https://codecov.io/gh/luanfreitas5/risco-diabetes-fairness)
