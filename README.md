@@ -10,6 +10,8 @@
 
 > ⚠️ Projeto **educacional / de portfólio**. Não é diagnóstico nem dispositivo médico.
 
+![Risco de Diabetes com Auditoria de Justiça](banner/diabetes.png)
+
 ## 🎯 Problema
 
 - **Quem decide o quê:** em um cenário hipotético de triagem, uma equipe de saúde decide quem encaminhar para exame confirmatório (glicemia/HbA1c) a partir de fatores de risco autorreportados.

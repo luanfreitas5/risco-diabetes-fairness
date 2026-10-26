@@ -39,15 +39,13 @@ def create_console_handler() -> RichHandler:
 
 
 def _rename_rotated(default_name: str) -> str:
-    """Converte ``logs/log.log.2026-09-27`` em ``logs/log_2026-09-27.log``."""
+    """Retorna o nome renomeado de ``logs/log.log.2026-09-27`` para ``logs/log_2026-09-27.log``."""
     path = Path(default_name)
     stem, date_str = path.name.split(".log.")
     return str(path.with_name(f"{stem}_{date_str}.log"))
 
 
-def create_daily_file_handler(
-    filename: str, backup_count: int = 30
-) -> TimedRotatingFileHandler:
+def create_daily_file_handler(filename: str, backup_count: int = 30) -> TimedRotatingFileHandler:
     """Cria o handler de arquivo com rotação diária à meia-noite.
 
     Parameters

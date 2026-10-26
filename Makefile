@@ -26,6 +26,7 @@ install-app:  ## Instala também o extra do dashboard Streamlit
 
 hooks:  ## Instala os hooks do pre-commit (pre-commit + commit-msg)
 	$(UV) run pre-commit install --hook-type pre-commit --hook-type commit-msg
+	$(UV) run detect-secrets scan > .secrets.baseline
 
 pre-commit:  ## Roda todos os hooks do pre-commit em todos os arquivos
 	$(UV) run pre-commit run --all-files

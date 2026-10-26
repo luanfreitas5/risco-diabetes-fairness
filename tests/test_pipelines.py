@@ -56,8 +56,14 @@ def test_run_preprocessing_writes_silver_gold_and_manifest(
 ) -> None:
     """O pipeline de pré-processamento valida, persiste e registra o manifesto."""
     monkeypatch.setattr(preprocessing_pipeline, "get_paths", lambda: fake_paths)
-    monkeypatch.setattr(preprocessing_pipeline, "load_bronze", lambda bronze_file=None: synthetic_raw)
-    monkeypatch.setattr(preprocessing_pipeline, "resolve_bronze_path", lambda bronze_file=None: fake_paths.data_bronze / "inexistente.csv")
+    monkeypatch.setattr(
+        preprocessing_pipeline, "load_bronze", lambda bronze_file=None: synthetic_raw
+    )
+    monkeypatch.setattr(
+        preprocessing_pipeline,
+        "resolve_bronze_path",
+        lambda bronze_file=None: fake_paths.data_bronze / "inexistente.csv",
+    )
 
     output = preprocessing_pipeline.run_preprocessing()
 

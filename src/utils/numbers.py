@@ -4,7 +4,7 @@ from __future__ import annotations
 
 
 def to_float(value: object) -> float:
-    """Converte um valor escalar (numpy/pandas/polars) para ``float`` nativo.
+    """Retorna um valor escalar (numpy/pandas/polars) como ``float`` nativo.
 
     Centraliza a conversão em um único ponto para contornar a tipagem parcial
     de bibliotecas de terceiros (ex.: ``pandas.Series.__getitem__`` e

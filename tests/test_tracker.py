@@ -10,7 +10,9 @@ from config.settings import get_settings
 from evaluation.evaluator import CrossValResult
 from experiment import tracker
 
-FAKE_CV = CrossValResult(metric="roc_auc", scores=[0.80, 0.82, 0.81], mean=0.81, std=0.01, ci95=0.01)
+FAKE_CV = CrossValResult(
+    metric="roc_auc", scores=[0.80, 0.82, 0.81], mean=0.81, std=0.01, ci95=0.01
+)
 
 
 @pytest.mark.smoke
@@ -42,7 +44,9 @@ def test_log_cv_run_creates_parent_and_fold_runs(
     mlflow = pytest.importorskip("mlflow")
     experiment = get_settings().experiment
     monkeypatch.setattr(experiment, "enabled", True)
-    monkeypatch.setattr(experiment, "tracking_uri", f"sqlite:///{(tmp_path / 'mlflow.db').as_posix()}")
+    monkeypatch.setattr(
+        experiment, "tracking_uri", f"sqlite:///{(tmp_path / 'mlflow.db').as_posix()}"
+    )
     monkeypatch.setattr(tracker, "compute_git_sha", lambda **kwargs: "sha-teste")
 
     from sklearn.dummy import DummyClassifier

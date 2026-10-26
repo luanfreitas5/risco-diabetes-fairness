@@ -10,12 +10,12 @@ com assinatura e exemplo de entrada. O backend é sempre um banco SQLite, nunca 
 from __future__ import annotations
 
 import os
-import subprocess  # noqa: S404 - usado apenas para consultar o Git local
+import subprocess  # nosec B404 - uso restrito a comandos git com argumentos fixos
 from pathlib import Path
 from typing import Any
 
 import mlflow
-import mlflow.sklearn
+import mlflow.sklearn as mlflow_sklearn
 import pandas as pd
 from mlflow.models import infer_signature
 from sklearn.pipeline import Pipeline
@@ -45,7 +45,7 @@ def _run_git(*args: str) -> str:
     str
         Saída padrão do comando.
     """
-    return subprocess.run(  # noqa: S603 - argumentos fixos, sem entrada do usuário
+    return subprocess.run(  # noqa: S603  # nosec B603 B607 - argumentos fixos, sem entrada do usuário
         ["git", *args],  # noqa: S607 - git resolvido pelo PATH do ambiente
         capture_output=True,
         text=True,
@@ -153,6 +153,7 @@ def log_cv_run(
         "seed": str(settings.random_seed),
     }
     metric = cv_result.metric
+    run_id: str | None = None
     with mlflow.start_run(run_name=name, tags=tags) as parent:
         params: dict[str, Any] = {
             **model.get_params(deep=False),
@@ -162,21 +163,19 @@ def log_cv_run(
         mlflow.log_params({key: str(value)[:500] for key, value in params.items()})
         for fold, score in enumerate(cv_result.scores):
             with mlflow.start_run(
-                run_name=f"{name}-fold{fold}", nested=True, tags={**tags, "fold": str(fold)}
+                run_name=f"{name}-fold{fold}", nested=True, tags=tags | {"fold": str(fold)}
             ):
                 mlflow.log_metric(f"val_{metric}", score)
-        mlflow.log_metrics(
-            {f"cv_{metric}_mean": cv_result.mean, f"cv_{metric}_std": cv_result.std}
-        )
+        mlflow.log_metrics({f"cv_{metric}_mean": cv_result.mean, f"cv_{metric}_std": cv_result.std})
         if fitted and x_example is not None:
             sample = x_example.head(_SIGNATURE_ROWS)
             signature = infer_signature(sample, model.predict_proba(sample)[:, 1])
-            mlflow.sklearn.log_model(
+            mlflow_sklearn.log_model(
                 model,
                 name="model",
                 signature=signature,
                 input_example=x_example.head(_EXAMPLE_ROWS),
-                serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
+                serialization_format=mlflow_sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE,
             )
         run_id = parent.info.run_id
     logger.info(
