@@ -185,7 +185,7 @@ convention = "numpy"  # docstrings no formato NumPy
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ARG", "PLR2004", "S101", "D"]  # asserts, fixtures e docstrings livres em testes
-"notebooks/*" = ["E402", "F401"]      # imports fora de ordem/não usados em notebooks
+"notebooks/*" = ["D100", "E402", "F401"]  # notebooks não têm docstring de módulo; imports fora de ordem/não usados
 
 [tool.ruff.format]
 docstring-code-format = true
